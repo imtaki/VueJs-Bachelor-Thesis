@@ -1,48 +1,38 @@
-# .
+# Vue HintAssistant plugin for Vue.Js
 
-This template should help get you started developing with Vue 3 in Vite.
+A Vue 3 plugin for executing code snippets via API and displaying results. Built with TypeScript and Axios.
 
-## Recommended IDE Setup
+![Plugin Screenshot](https://via.placeholder.com/800x400/667eea/ffffff?text=Code+Executor+Plugin)
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Installation
 
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```bash
+npm install vue-hint-assistant
 ```
 
-### Compile and Hot-Reload for Development
+## Props
 
-```sh
-npm run dev
+- `sourceCode` (string, required) - Code to execute
+
+## Project Structure
+
+```
+src/
+├── styles/
+│   └── index.css
+├── App.vue
+└── main.ts
 ```
 
-### Type-Check, Compile and Minify for Production
+## How It Works
 
-```sh
-npm run build
-```
+1. Pass code as `sourceCode` prop
+2. Plugin sends POST request with Axios to API
+3. API analyzes code and returns a Hint response
+4. Response displayed to user
 
-### Lint with [ESLint](https://eslint.org/)
 
-```sh
-npm run lint
-```
+## Author
+Dominik Takáč
+
+Bachelor Thesis Project
