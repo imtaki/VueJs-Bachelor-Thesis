@@ -1,0 +1,112 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+  gap: 20px;
+}
+
+.nav-items {
+  display: flex;
+  gap: 16px;
+}
+
+.nav-item {
+  background: #e5e5e5;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.code-assistant {
+  position: relative;
+}
+
+.assistant-button {
+  background: #e5e5e5;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.assistant-window {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 300px;
+  height: 400px;
+  background: #f8f8f8;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.assistant-header {
+  background: #464767;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.assistant-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.source-block {
+  background: #efefef;
+  padding: 6px;
+  margin-top: 10px;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.assistant-footer {
+  border-top: 1px solid #ccc;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.assistant-footer input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.assistant-footer button {
+  padding: 8px 12px;
+  border: none;
+  background: #464767;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}

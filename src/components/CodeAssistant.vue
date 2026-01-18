@@ -1,5 +1,7 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
+import '../styles/index.css'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'CodeAssistant',
@@ -10,14 +12,34 @@ export default defineComponent({
       default: '',
     },
   },
-  setup(props) {
-    const isOpen = ref(false)
-
-    const toggle = () => {
-      isOpen.value = !isOpen.value
+  data() {
+    return {
+      isOpen: false,
+      message: '',
+      response: '',
+      loading: false,
     }
+  },
+  methods: {
+    toggle() {
+      this.isOpen = !this.isOpen
+    },
+    async sendMessage() {
+      this.loading = true
 
-    return { isOpen, toggle, props }
+      try {
+        const res = await axios.post('backend/api/llm', {
+          // This is placeholder for now! Todo: replace with actual backend endpoint, use promises
+          message: this.message,
+          sourceCode: this.sourceCode,
+        })
+        this.response = res.data.message
+      } catch (error) {
+        console.error('Error communicating with LLM:', error)
+      } finally {
+        this.loading = false
+      }
+    },
   },
 })
 </script>
@@ -32,80 +54,20 @@ export default defineComponent({
     <div v-if="isOpen" class="assistant-window">
       <header class="assistant-header">Priscilla LLM</header>
       <div class="assistant-body">
-        <p><strong>Response from LLM:</strong></p>
-        <p class="mock-response">This is a placeholder AI response.</p>
+        <p v-if="response">Response from LLM:</p>
+        <p v-if="response" class="mock-response">{{ response }}</p>
 
         <div class="source-block">
-          <p><strong>Source code passed as prop:</strong></p>
-          <pre>{{ props.sourceCode }}</pre>
+          <p>Source code passed as prop:</p>
+          <pre>{{ sourceCode }}</pre>
         </div>
       </div>
       <footer class="assistant-footer">
-        <input placeholder="Enter your message..." />
+        <input v-model="message" placeholder="Enter your message..." :disabled="loading" />
+        <button @click="sendMessage" :disabled="loading">
+          {{ loading ? 'Sending...' : 'Send' }}
+        </button>
       </footer>
     </div>
   </div>
 </template>
-
-<style scoped>
-.code-assistant {
-  position: relative;
-}
-
-.assistant-button {
-  background: #e5e5e5;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.assistant-window {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  width: 300px;
-  height: 400px;
-  background: #f8f8f8;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-}
-
-.assistant-header {
-  background: #464767;
-  color: white;
-  padding: 10px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.assistant-body {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-}
-
-.source-block {
-  background: #efefef;
-  padding: 6px;
-  margin-top: 10px;
-  font-family: monospace;
-  font-size: 12px;
-}
-
-.assistant-footer {
-  border-top: 1px solid #ccc;
-  padding: 10px;
-}
-
-.assistant-footer input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-</style>
