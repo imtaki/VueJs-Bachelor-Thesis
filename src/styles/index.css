@@ -28,6 +28,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  position: relative;
 }
 
 .main-content {
@@ -36,9 +37,30 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 40px;
 }
 
-.code-assistant {
+.code-section {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin-top: 30px;
+}
+
+.code-section pre {
+  background: #2d2d2d;
+  color: #f8f8f2;
+  padding: 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* PriscillaAI Component Styles */
+.priscilla-ai {
   position: relative;
 }
 
@@ -50,33 +72,153 @@
   border-radius: 6px;
   font-size: 18px;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.assistant-button:hover {
+  background: #d0d0d0;
+}
+
+.assistant-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .assistant-window {
   position: absolute;
   top: 50px;
   right: 0;
-  width: 300px;
-  height: 400px;
+  width: 350px;
+  height: auto;
+  max-height: 500px;
   background: #f8f8f8;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+  z-index: 1000;
 }
 
 .assistant-header {
   background: #464767;
   color: white;
-  padding: 10px;
+  padding: 12px;
   font-weight: bold;
   text-align: center;
+  border-radius: 8px 8px 0 0;
 }
 
 .assistant-body {
   flex: 1;
-  padding: 10px;
+  padding: 12px;
   overflow-y: auto;
+  max-height: 350px;
+}
+
+.extracted-content {
+  margin-bottom: 12px;
+}
+
+.code-block {
+  background: #2d2d2d;
+  color: #f8f8f2;
+  padding: 8px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  overflow-x: auto;
+  margin: 8px 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.hint-section {
+  background: #e8f5e9;
+  padding: 10px;
+  border-left: 3px solid #4caf50;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+.hint-text {
+  color: #2e7d32;
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+  border-left: 3px solid #f44336;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 10px;
+  color: #666;
+}
+
+.metadata {
+  font-size: 12px;
+  color: #999;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.assistant-footer {
+  border-top: 1px solid #ccc;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  background: #fafafa;
+  border-radius: 0 0 8px 8px;
+}
+
+.primary-button {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: #464767;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.primary-button:hover:not(:disabled) {
+  background: #323549;
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #464767;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.secondary-button:hover {
+  background: #f5f5f5;
+  border-color: #464767;
+}
+
+.code-assistant {
+  position: relative;
 }
 
 .source-block {
@@ -87,26 +229,22 @@
   font-size: 12px;
 }
 
-.assistant-footer {
-  border-top: 1px solid #ccc;
-  padding: 8px;
-  display: flex;
-  gap: 8px;
-}
-
-.assistant-footer input {
-  flex: 1;
+.mock-response {
+  background: #e8f4f8;
   padding: 8px;
   border-radius: 4px;
+  color: #333;
+}
+
+.code-editor {
+  width: 100%;
+  min-height: 200px;
+  font-family: monospace;
+  font-size: 14px;
+  padding: 12px;
+  border-radius: 6px;
   border: 1px solid #ccc;
-}
-
-.assistant-footer button {
-  padding: 8px 12px;
-  border: none;
-  background: #464767;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-  white-space: nowrap;
+  background: #1e1e1e;
+  color: #eaeaea;
+  resize: vertical;
 }
