@@ -6,7 +6,10 @@ export default defineComponent({
   name: 'App',
   data() {
     return {
-      sourceCode: '1',
+      sourceCode: `function fibonacci(n) {
+  if (n <= 1) return n
+  return fibonacci(n - 1) + fibonacci(n - 2)
+}`,
     }
   },
 })
@@ -22,14 +25,25 @@ export default defineComponent({
         <div class="nav-item">📊</div>
 
         <div class="nav-item">
-          <CodeAssistant :sourceCode="sourceCode" />
+          <PriscillaAI xpath="//textarea[@id='code-block']" :chapterId="12" :programId="589" />
         </div>
       </div>
     </nav>
 
     <main class="main-content">
       <h1>Welcome to Priscilla LLM</h1>
-      <p>This is a mock navbar + AI assistant example.</p>
+      <p>This is a mock navbar + AI assistant example with code hint capability.</p>
+
+      <section class="code-section">
+        <h2>Code Example</h2>
+        <textarea
+          id="code-block"
+          v-model="sourceCode"
+          class="code-editor"
+          spellcheck="false"
+        ></textarea>
+        <p><small>Click the 🤖 icon in the navbar to get a hint about this code!</small></p>
+      </section>
     </main>
   </div>
 </template>
