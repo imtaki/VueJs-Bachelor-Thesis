@@ -1,29 +1,31 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-import axios from 'axios'
+import { defineComponent, computed } from 'vue'
+import axios, { type CancelTokenSource } from 'axios'
 import { getPriscillaAIEndpoint } from '@/plugins/priscillaAI'
+import type { PriscillaAIResponse } from '@/types/priscillaAI'
 import '../styles/index.css'
-
-interface PriscillaAIResponse {
-  hint: string
-}
 
 export default defineComponent({
   name: 'PriscillaAI',
+
   props: {
     xpath: {
       type: String,
       required: true,
+      validator: (value: string) => value.trim().length > 0,
     },
     chapterId: {
       type: Number,
       required: true,
+      validator: (value: number) => Number.isInteger(value) && value > 0,
     },
     programId: {
       type: Number,
       required: true,
+      validator: (value: number) => Number.isInteger(value) && value > 0,
     },
   },
+
   data() {
     return {
       isOpen: false,
@@ -31,14 +33,31 @@ export default defineComponent({
       hint: '',
       error: '',
       extractedContent: '',
+      cancelSource: null as CancelTokenSource | null,
     }
   },
+
+  computed: {
+    hasResult(): boolean {
+      return !!(this.hint || this.extractedContent)
+    },
+    buttonLabel(): string {
+      return this.loading ? 'Fetching…' : 'Get Hint'
+    },
+  },
+
+  beforeUnmount() {
+    this.cancelSource?.cancel('Component unmounted')
+  },
+
   methods: {
     toggle() {
       this.isOpen = !this.isOpen
     },
 
-    extractCodeFromXPath(): string | null {
+    extractCodeFromXPath(): string {
+      let node: Node | null
+
       try {
         const result = document.evaluate(
           this.xpath,
@@ -47,60 +66,66 @@ export default defineComponent({
           XPathResult.FIRST_ORDERED_NODE_TYPE,
           null,
         )
-
-        const node = result.singleNodeValue as HTMLTextAreaElement | HTMLElement | null
-        if (node) {
-          if (node instanceof HTMLTextAreaElement) {
-            return node.value
-          }
-
-          return node.textContent || null
-        }
-        return null
-      } catch (err) {
-        console.error('Error evaluating XPath:', err)
-        this.error = 'Failed to extract code from the specified XPath'
-        return null
+        node = result.singleNodeValue
+      } catch {
+        throw new Error(`Invalid XPath expression: "${this.xpath}"`)
       }
+
+      if (!node) {
+        throw new Error('No element matched the provided XPath.')
+      }
+
+      const content =
+        node instanceof HTMLTextAreaElement
+          ? node.value
+          : (node as HTMLElement).textContent
+
+      if (!content?.trim()) {
+        throw new Error('Matched element contains no extractable text.')
+      }
+
+      return content.trim()
     },
 
     async fetchHint() {
+      this.cancelSource?.cancel('Superseded by newer request')
+
       this.loading = true
       this.error = ''
       this.hint = ''
+      this.extractedContent = ''
 
       try {
         const content = this.extractCodeFromXPath()
-
-        if (!content) {
-          this.error = 'Could not extract code from the specified element'
-          this.loading = false
-          return
-        }
-
         this.extractedContent = content
 
         const endpoint = getPriscillaAIEndpoint()
-
         if (!endpoint) {
-          this.error = 'API endpoint not configured. Please initialize the plugin with an endpoint.'
-          this.loading = false
-          return
+          throw new Error('API endpoint not configured. Please initialise the plugin.')
         }
 
-        const response = await axios.post<PriscillaAIResponse>(endpoint, {
-          content: content,
-          chapterId: this.chapterId,
-          programId: this.programId,
-        })
+        this.cancelSource = axios.CancelToken.source()
 
-        this.hint = response.data.hint || 'No hint available'
+        const { data } = await axios.post<PriscillaAIResponse>(
+          endpoint,
+          {
+            content,
+            chapterId: this.chapterId,
+            programId: this.programId,
+          },
+          { cancelToken: this.cancelSource.token },
+        )
+
+        this.hint = data.hint?.trim() || 'No hint available for this submission.'
       } catch (err) {
-        console.error('Error fetching hint:', err)
-        if (axios.isAxiosError(err)) {
-          this.error = `API Error: ${err.response?.status || 'Unknown'} - ${err.message}`
+        if (axios.isCancel(err)) return 
+
+        if (err instanceof Error) {
+          this.error = err.message
+        } else if (axios.isAxiosError(err)) {
+          this.error = `API ${err.response?.status ?? 'Error'}: ${err.message}`
         } else {
-          this.error = 'An unexpected error occurred while fetching the hint'
+          this.error = 'An unexpected error occurred.'
         }
       } finally {
         this.loading = false
@@ -111,6 +136,7 @@ export default defineComponent({
       this.hint = ''
       this.extractedContent = ''
       this.error = ''
+      this.cancelSource?.cancel('Cleared by user')
     },
   },
 })
@@ -118,45 +144,48 @@ export default defineComponent({
 
 <template>
   <div class="priscilla-ai">
-    <button class="assistant-button" @click="toggle" :title="`XPath: ${xpath}`">
-      <span v-if="!isOpen">🤖</span>
-      <span v-else>✖️</span>
+    <button
+      class="assistant-button"
+      :aria-expanded="isOpen"
+      :aria-label="isOpen ? 'Close hint assistant' : 'Open hint assistant'"
+      @click="toggle"
+    >
+      <span aria-hidden="true">{{ isOpen ? '✖️' : '🤖' }}</span>
     </button>
 
-    <div v-if="isOpen" class="assistant-window">
-      <header class="assistant-header">Priscilla AI - Code Hint Assistant</header>
+    <div
+      v-if="isOpen"
+      class="assistant-window"
+      role="dialog"
+      aria-label="Priscilla AI – Code Hint Assistant"
+    >
+      <header class="assistant-header">Priscilla AI — Code Hint Assistant</header>
+
       <div class="assistant-body">
-        <div v-if="extractedContent" class="extracted-content">
+        <template v-if="extractedContent">
           <p><strong>Extracted Code:</strong></p>
           <pre class="code-block">{{ extractedContent }}</pre>
-        </div>
+        </template>
 
-        <div v-if="hint" class="hint-section">
+        <template v-if="hint">
           <p><strong>💡 Hint:</strong></p>
           <p class="hint-text">{{ hint }}</p>
-        </div>
+        </template>
 
-        <div v-if="error" class="error-message">
-          <p>❌ {{ error }}</p>
-        </div>
+        <p v-if="error" class="error-message" role="alert">❌ {{ error }}</p>
 
-        <div v-if="loading" class="loading-spinner">
-          <p>⏳ Fetching hint...</p>
-        </div>
+        <p v-if="loading" class="loading-spinner" aria-live="polite">⏳ Fetching hint…</p>
 
-        <div class="metadata">
-          <p>
-            <small>Chapter ID: {{ chapterId }} | Program ID: {{ programId }}</small>
-          </p>
-        </div>
+        <p class="metadata">
+          <small>Chapter {{ chapterId }} · Program {{ programId }}</small>
+        </p>
       </div>
+
       <footer class="assistant-footer">
-        <button @click="fetchHint" :disabled="loading" class="primary-button">
-          {{ loading ? 'Fetching...' : 'Get Hint' }}
+        <button class="primary-button" :disabled="loading" @click="fetchHint">
+          {{ buttonLabel }}
         </button>
-        <button v-if="hint || extractedContent" @click="clearHint" class="secondary-button">
-          Clear
-        </button>
+        <button v-if="hasResult" class="secondary-button" @click="clearHint">Clear</button>
       </footer>
     </div>
   </div>
