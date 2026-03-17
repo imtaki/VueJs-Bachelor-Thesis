@@ -1,6 +1,11 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
-import codeAssistant from './plugins/codeAssistant'
+import { createPriscillaAI } from './plugins/priscillaAI'
 
-createApp(App).use(createPinia()).use(codeAssistant).mount('#app')
+const app = createApp(App)
+
+app.use(createPriscillaAI('https://api.example.com/api/predict/hint'))
+app.use(createPinia())
+
+app.mount('#app')
