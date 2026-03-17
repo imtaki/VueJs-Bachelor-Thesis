@@ -19,11 +19,6 @@ export default defineComponent({
   <div class="app-container">
     <nav class="navbar">
       <div class="nav-items">
-        <div class="nav-item">🏠</div>
-        <div class="nav-item">📁</div>
-        <div class="nav-item">🧩</div>
-        <div class="nav-item">📊</div>
-
         <div class="nav-item">
           <PriscillaAI xpath="//textarea[@id='code-block']" :chapterId="12" :programId="589" />
         </div>
