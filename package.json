@@ -5,7 +5,9 @@
   "private": false,
   "license": "MIT",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+  "*.css"
+  ],
   "keywords": [
     "vue",
     "vue3",
@@ -44,8 +46,9 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
-    "axios": "^1.13.2",
-    "pinia": "^3.0.4",
+    "axios": "^1.13.2"
+  },
+  "peerDependencies": {
     "vue": "^3.5.25"
   },
   "devDependencies": {

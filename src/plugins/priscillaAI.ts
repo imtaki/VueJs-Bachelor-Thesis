@@ -1,5 +1,5 @@
 import type { App } from 'vue'
-import PriscillaAI from '@/components/PriscillaAI.vue'
+import PriscillaAI from '../components/PriscillaAI.vue'
 import '../styles/index.css'
 
 let apiEndpoint: string = ''

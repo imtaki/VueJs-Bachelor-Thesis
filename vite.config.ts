@@ -16,6 +16,7 @@ export default defineConfig({
       formats: ['es', 'umd'],
       fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`
     },
+    cssCodeSplit: true,
     rollupOptions: {
       external: ['vue', 'axios'],
       output: {
