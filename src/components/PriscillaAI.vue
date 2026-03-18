@@ -1,9 +1,9 @@
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import axios, { type CancelTokenSource } from 'axios'
 import { getPriscillaAIEndpoint } from '@/plugins/priscillaAI'
-import type { PriscillaAIResponse } from '@/types/priscillaAI'
 import '../styles/index.css'
+import type { PriscillaAIResponse } from '@/types/priscillaAI'
 
 export default defineComponent({
   name: 'PriscillaAI',

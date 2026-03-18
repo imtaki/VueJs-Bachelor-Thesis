@@ -19,7 +19,3 @@ export function getPriscillaAIEndpoint(): string {
   return apiEndpoint
 }
 
-export default {
-  createPriscillaAI,
-  getPriscillaAIEndpoint,
-}
