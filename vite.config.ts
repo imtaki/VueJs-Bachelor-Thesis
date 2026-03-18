@@ -23,7 +23,8 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
           axios: 'axios'
-        }
+        },
+        assetFileNames: "index.css"
       }
     }
   }
