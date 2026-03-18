@@ -1,6 +1,6 @@
 {
   "name": "@priscilla-ai/vue",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Vue 3 Plugin in Options Api for Priscilla learning portal",
   "private": false,
   "license": "MIT",
