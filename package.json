@@ -1,6 +1,6 @@
 {
   "name": "@priscilla-ai/vue",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Vue 3 Plugin in Options Api for Priscilla learning portal",
   "private": false,
   "license": "MIT",
@@ -28,7 +28,7 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-     "./dist/index.css": "./dist/index.css"
+    "./dist/index.css": "./dist/index.css"
   },
   "repository": {
     "type": "git",
