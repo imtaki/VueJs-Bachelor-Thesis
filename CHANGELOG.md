@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.8] - 12-04-2026
+- Removed Pinia import
+- Changed plugin icon
+
 ## [1.0.7] - 12-04-2026
 - Added comprehensive test suite with 50 unit and integration tests
 - Tests cover plugin initialization, component integration, props validation, error handling, performance, and memory management

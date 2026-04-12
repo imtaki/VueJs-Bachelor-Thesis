@@ -149,7 +149,7 @@ export default defineComponent({
       :aria-label="isOpen ? 'Close hint assistant' : 'Open hint assistant'"
       @click="toggle"
     >
-      <span aria-hidden="true">{{ isOpen ? '✖️' : '🤖' }}</span>
+      <span aria-hidden="true">{{ isOpen ? '✖️' : '?' }}</span>
     </button>
 
     <div
